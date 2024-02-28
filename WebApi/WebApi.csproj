@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NSwag.AspNetCore" Version="14.0.1" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <Target Name="GenerateSwaggerJson" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <Compile Remove="Controllers/**" />
+    </ItemGroup>
+    <Exec Command="$(NSwagExe_Net80) run nswag.json /variables:InputFile=../openapi.yml" Outputs="Controllers/*.cs">
+      <Output ItemName="Generated" TaskParameter="Outputs" />
+    </Exec>
+    <ItemGroup>
+      <!--Dynamically adding the generated files to the project because they didn't exist when the build started and would not be seen causing a compilation error.-->
+      <Compile Include="@(Generated)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="DeleteGeneratedCode" AfterTargets="Clean">
+    <RemoveDir Directories="Controllers" />
+  </Target>
+
+</Project>

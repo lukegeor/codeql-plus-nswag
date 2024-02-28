@@ -1,0 +1,33 @@
+openapi: 3.0.1
+info:
+  title: WebApi Service
+  description: WebApi Service
+  termsOfService: http://www.example.com
+  contact:
+    name: Swagger Codegen Contributors
+    url: https://github.com/swagger-api/swagger-codegen
+    email: ''
+  version: 1.0.0
+paths:
+  /v1/data:
+    get:
+      tags:
+        - Data
+      summary: Get data
+      operationId: getData
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataDto'
+components:
+  schemas:
+    DataDto:
+      type: object
+      properties:
+        Id:
+          type: string
+        Info:
+          type: string
