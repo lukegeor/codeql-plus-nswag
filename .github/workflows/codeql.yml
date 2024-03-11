@@ -31,8 +31,8 @@ jobs:
     container:
       image: oraclelinux:8
       env:
-        PLATFORM: ${{ env.PLATFORM }}
-        LIB: ${{ env.LIB }}
+        PLATFORM: x86_64
+        LIB: lib64
     permissions:
       # required for all workflows
       security-events: write
@@ -51,6 +51,16 @@ jobs:
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
+    - name: Install prereqs
+      run: |
+        dnf install -y oracle-epel-release-el8
+        dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm
+        dnf config-manager --set-enabled ol8_codeready_builder
+        dnf install -y \
+          git \
+          tar \
+          libicu
+    
     - name: Checkout repository
       uses: actions/checkout@v4
 
