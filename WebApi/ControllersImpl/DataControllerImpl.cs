@@ -4,12 +4,35 @@ namespace WebApi.ControllersImpl;
 
 public class DataControllerImpl : IDataController
 {
-    public Task<ActionResult<DataDto>> GetDataAsync(CancellationToken cancellationToken = default(CancellationToken))
+    private readonly ILogger<DataControllerImpl> _logger;
+
+    public DataControllerImpl(ILogger<DataControllerImpl> logger)
     {
-        return Task.FromResult((ActionResult<DataDto>)new OkObjectResult(new DataDto
+        _logger = logger;
+    }
+
+    public Task<ActionResult<ICollection<DataDto>>> GetDataAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult((ActionResult<ICollection<DataDto>>) new OkObjectResult(new[]
         {
-            Id = "1",
-            Info = "Info"
+            new DataDto
+            {
+                Id = "1",
+                Info = "Info"
+            }
         }));
+    }
+
+    public Task<ActionResult<DataDto>> GetDataForUserAsync(string userId,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug($"UserId: {userId}");
+        return Task.FromResult((ActionResult<DataDto>) new OkObjectResult(
+            new DataDto
+            {
+                Id = "1",
+                Info = "Info"
+            }));
     }
 }
