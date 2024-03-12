@@ -30,9 +30,6 @@ jobs:
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     container:
       image: oraclelinux:8
-      env:
-        PLATFORM: x86_64
-        LIB: lib64
     permissions:
       # required for all workflows
       security-events: write
@@ -60,7 +57,12 @@ jobs:
           git \
           tar \
           libicu
-    
+
+    - name: Install dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.100
+
     - name: Checkout repository
       uses: actions/checkout@v4
 
@@ -82,9 +84,6 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
-      env:
-        PLATFORM: x86_64
-        LIB: lib64
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
